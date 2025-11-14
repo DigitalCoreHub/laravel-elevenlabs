@@ -1,0 +1,63 @@
+<?php
+
+namespace DigitalCoreHub\LaravelElevenLabs;
+
+use DigitalCoreHub\LaravelElevenLabs\Http\Clients\ElevenLabsClient;
+use DigitalCoreHub\LaravelElevenLabs\Http\Endpoints\TtsEndpoint;
+use DigitalCoreHub\LaravelElevenLabs\Services\TTS\TtsService;
+use Illuminate\Support\ServiceProvider;
+
+class ElevenLabsServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/elevenlabs.php',
+            'elevenlabs'
+        );
+
+        $this->app->singleton(ElevenLabsClient::class, function ($app) {
+            $config = $app['config']['elevenlabs'];
+
+            return new ElevenLabsClient(
+                apiKey: $config['api_key'],
+                baseUrl: $config['base_url'],
+                timeout: $config['timeout']
+            );
+        });
+
+        $this->app->singleton(TtsEndpoint::class, function ($app) {
+            return new TtsEndpoint(
+                $app->make(ElevenLabsClient::class)
+            );
+        });
+
+        $this->app->bind(TtsService::class, function ($app) {
+            $config = $app['config']['elevenlabs'];
+
+            return new TtsService(
+                endpoint: $app->make(TtsEndpoint::class),
+                defaultVoice: $config['default_voice'],
+                defaultFormat: $config['default_format']
+            );
+        });
+
+        $this->app->singleton('elevenlabs', function ($app) {
+            return $app;
+        });
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        $this->publishes([
+            __DIR__ . '/../config/elevenlabs.php' => config_path('elevenlabs.php'),
+        ], 'elevenlabs-config');
+    }
+}
+
