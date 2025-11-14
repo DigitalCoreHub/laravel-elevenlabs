@@ -1,0 +1,53 @@
+{
+    "name": "digitalcorehub/laravel-elevenlabs",
+    "description": "Laravel package for ElevenLabs Text-to-Speech API integration",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "elevenlabs",
+        "tts",
+        "text-to-speech",
+        "voice",
+        "audio"
+    ],
+    "authors": [
+        {
+            "name": "DigitalCoreHub",
+            "email": "haymana.batuhan@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^12.0",
+        "illuminate/http": "^12.0",
+        "illuminate/filesystem": "^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DigitalCoreHub\\LaravelElevenLabs\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DigitalCoreHub\\LaravelElevenLabs\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DigitalCoreHub\\LaravelElevenLabs\\ElevenLabsServiceProvider"
+            ],
+            "aliases": {
+                "ElevenLabs": "DigitalCoreHub\\LaravelElevenLabs\\Facades\\ElevenLabs"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+
